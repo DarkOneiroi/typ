@@ -1,3 +1,8 @@
+// Copyright (c) 2026 DarkOneiroi
+// All rights reserved.
+// This source code is proprietary and confidential.
+// Unauthorized copying of this file, via any medium, is strictly prohibited.
+
 package config
 
 import (
@@ -33,7 +38,8 @@ func TestLoadConfig(t *testing.T) {
 	}
 
 	// Test manual modification
-	err = os.WriteFile(configPath, []byte("playback_quality: 4k\nlanguage: jp"), 0644)
+	err = os.WriteFile(configPath, []byte("playback_quality: 4k
+language: jp"), 0644)
 	if err != nil {
 		t.Fatal(err)
 	}

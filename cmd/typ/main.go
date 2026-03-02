@@ -1,3 +1,8 @@
+// Copyright (c) 2026 DarkOneiroi
+// All rights reserved.
+// This source code is proprietary and confidential.
+// Unauthorized copying of this file, via any medium, is strictly prohibited.
+
 package main
 
 import (
@@ -56,7 +61,8 @@ func main() {
 		client := ipc.NewClient(sp)
 		_, err := client.SendRequest(ipc.Request{Type: ipc.ReqStop})
 		if err != nil {
-			fmt.Printf("Could not stop daemon via IPC: %v. Killing process...\n", err)
+			fmt.Printf("Could not stop daemon via IPC: %v. Killing process...
+", err)
 			exec.Command("pkill", "-f", "typ --daemon").Run()
 		} else {
 			fmt.Println("Stopped TYP daemon.")
@@ -69,7 +75,8 @@ func main() {
 		if err != nil {
 			log.Fatalf("Failed to create daemon: %v", err)
 		}
-		fmt.Printf("Starting TYP Daemon on %s...\n", sp)
+		fmt.Printf("Starting TYP Daemon on %s...
+", sp)
 		if err := d.Start(); err != nil {
 			log.Fatalf("Daemon error: %v", err)
 		}
@@ -82,7 +89,8 @@ func main() {
 	// Try to ping daemon, if not running, start it
 	_, err = client.SendRequest(ipc.Request{Type: ipc.ReqStatus})
 	if err != nil {
-		fmt.Printf("Daemon not running, attempting to start it...\n")
+		fmt.Printf("Daemon not running, attempting to start it...
+")
 		// Start daemon in background
 		exe, err := os.Executable()
 		if err != nil {
@@ -112,7 +120,8 @@ func main() {
 		// Try connecting again to verify it started successfully
 		_, err = client.SendRequest(ipc.Request{Type: ipc.ReqStatus})
 		if err != nil {
-			fmt.Printf("Error: Daemon started but is not responding. Check if dependencies (mpv, yt-dlp) are installed.\n")
+			fmt.Printf("Error: Daemon started but is not responding. Check if dependencies (mpv, yt-dlp) are installed.
+")
 			os.Exit(1)
 		}
 	}

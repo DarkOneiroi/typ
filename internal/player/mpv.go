@@ -1,3 +1,8 @@
+// Copyright (c) 2026 DarkOneiroi
+// All rights reserved.
+// This source code is proprietary and confidential.
+// Unauthorized copying of this file, via any medium, is strictly prohibited.
+
 package player
 
 import (
@@ -149,7 +154,8 @@ func (p *MpvPlayer) sendCommand(args ...interface{}) error {
 		return err
 	}
 
-	_, err = p.conn.Write(append(data, '\n'))
+	_, err = p.conn.Write(append(data, '
+'))
 	return err
 }
 

@@ -1,3 +1,8 @@
+// Copyright (c) 2026 DarkOneiroi
+// All rights reserved.
+// This source code is proprietary and confidential.
+// Unauthorized copying of this file, via any medium, is strictly prohibited.
+
 package ui
 
 import (
@@ -388,7 +393,8 @@ func (m Model) View() string {
 		return m.styles.Confirmation.
 			Width(m.width).
 			Height(m.height).
-			Render("Active downloads detected!\nQuit and resume later? (y/n)")
+			Render("Active downloads detected!
+Quit and resume later? (y/n)")
 	}
 
 	header := m.renderHeader()
@@ -417,7 +423,8 @@ func (m Model) View() string {
 
 	mainContent := lipgloss.NewStyle().Height(mainHeight).MaxHeight(mainHeight).Render(content)
 	
-	return header + mainContent + "\n" + legend
+	return header + mainContent + "
+" + legend
 }
 
 func (m Model) renderHeader() string {
@@ -432,12 +439,15 @@ func (m Model) renderHeader() string {
 		renderedTabs = append(renderedTabs, style.Render(t))
 	}
 	
-	return m.styles.Header.Render(lipgloss.JoinHorizontal(lipgloss.Top, renderedTabs...)) + "\n"
+	return m.styles.Header.Render(lipgloss.JoinHorizontal(lipgloss.Top, renderedTabs...)) + "
+"
 }
 
 func (m Model) renderSearchView() string {
 	var s strings.Builder
-	s.WriteString(m.styles.ActiveTitle.Render("── SEARCH TYPE ──") + "\n\n")
+	s.WriteString(m.styles.ActiveTitle.Render("── SEARCH TYPE ──") + "
+
+")
 	
 	choices := []string{"Search Videos", "Search Channels"}
 	for i, c := range choices {
@@ -447,21 +457,26 @@ func (m Model) renderSearchView() string {
 			prefix = m.styles.Cursor.Render("> ")
 			style = m.styles.ActiveTitle
 		}
-		s.WriteString(fmt.Sprintf("%s%s\n", prefix, style.Render(c)))
+		s.WriteString(fmt.Sprintf("%s%s
+", prefix, style.Render(c)))
 	}
 	
-	s.WriteString("\n")
+	s.WriteString("
+")
 	if m.isSearching {
-		s.WriteString(fmt.Sprintf("Search Query: %s_\n", m.query))
+		s.WriteString(fmt.Sprintf("Search Query: %s_
+", m.query))
 	} else {
-		s.WriteString(m.styles.Meta.Render("Press enter to start typing query for selected type.\n"))
+		s.WriteString(m.styles.Meta.Render("Press enter to start typing query for selected type.
+"))
 	}
 	return s.String()
 }
 
 func (m Model) renderResultsView(maxHeight int) string {
 	if m.isLoadingResults && len(m.results) == 0 {
-		return m.styles.MetaHighlight.PaddingLeft(3).Render("\nSearching YouTube... Please wait...")
+		return m.styles.MetaHighlight.PaddingLeft(3).Render("
+Searching YouTube... Please wait...")
 	}
 
 	var s strings.Builder
@@ -476,7 +491,9 @@ func (m Model) renderResultsView(maxHeight int) string {
 
 	if len(m.results) > 0 {
 		pageInfo := m.styles.Meta.Render(fmt.Sprintf("Page %d | Results %d-%d of %d", m.page, start+1, end, len(m.results)))
-		s.WriteString("   " + pageInfo + "\n\n")
+		s.WriteString("   " + pageInfo + "
+
+")
 	}
 
 	for i := start; i < end; i++ {
@@ -505,7 +522,10 @@ func (m Model) renderResultsView(maxHeight int) string {
 		if res.IsDownloaded { metaLine += " 📥" }
 		metaLine = truncate(metaLine, m.width-6)
 
-		s.WriteString(fmt.Sprintf("%s%s %s\n   %s\n\n", 
+		s.WriteString(fmt.Sprintf("%s%s %s
+   %s
+
+", 
 			cursor,
 			titleStyle.Render(title), 
 			m.styles.MetaHighlight.Render("["+infoStr+"]"),
@@ -513,7 +533,8 @@ func (m Model) renderResultsView(maxHeight int) string {
 	}
 
 	if len(m.results) == 0 && !m.isLoadingResults {
-		return m.styles.Meta.PaddingLeft(3).Render("\nNo results found. Start a search in view 1.")
+		return m.styles.Meta.PaddingLeft(3).Render("
+No results found. Start a search in view 1.")
 	}
 	
 	return s.String()
@@ -538,7 +559,9 @@ func (m Model) renderDownloadsView() string {
 	if m.isWorkerPaused { 
 		statusText = m.styles.WorkerPaused.Render("Worker: Paused") 
 	}
-	s.WriteString(statusText + "\n\n")
+	s.WriteString(statusText + "
+
+")
 
 	for i, p := range m.downloads {
 		cursor := "  "
@@ -556,14 +579,16 @@ func (m Model) renderDownloadsView() string {
 			
 			header := fmt.Sprintf("%s[CHN] %s", cursor, p.Title)
 			if p.PlaylistTotal > 0 { header += fmt.Sprintf(" (%d videos)", p.PlaylistTotal) }
-			s.WriteString(titleStyle.Render(header) + "\n")
+			s.WriteString(titleStyle.Render(header) + "
+")
 			
 			barWidth := 40
 			if m.width > 60 { barWidth = m.width - 20 }
 			if barWidth > 80 { barWidth = 80 }
 			
 			bar := m.renderProgressBar(agg, barWidth)
-			s.WriteString(fmt.Sprintf("  %s  %s | %s\n", bar, p.Speed, p.ETA))
+			s.WriteString(fmt.Sprintf("  %s  %s | %s
+", bar, p.Speed, p.ETA))
 			
 			currentTitle := p.CurrentVideoTitle
 			if currentTitle == "" { currentTitle = "Discovering..." }
@@ -572,14 +597,17 @@ func (m Model) renderDownloadsView() string {
 			totStr := "?"; if p.PlaylistTotal > 0 { totStr = fmt.Sprintf("%d", p.PlaylistTotal) }
 
 			videoInfo := fmt.Sprintf("⏳ [%s/%s] %s (%.1f%%)", idxStr, totStr, currentTitle, p.Percentage)
-			s.WriteString(m.styles.MetaHighlight.PaddingLeft(4).Render(videoInfo) + "\n\n")
+			s.WriteString(m.styles.MetaHighlight.PaddingLeft(4).Render(videoInfo) + "
+
+")
 		} else {
 			status := "queued"
 			if p.Percentage > 0 { status = fmt.Sprintf("%.1f%%", p.Percentage) }
 			if m.isWorkerPaused { status = "[PAUSED] " + status }
 
 			line := fmt.Sprintf("%s[VID] %s | %s | %s | %s", cursor, status, p.Speed, p.ETA, p.Title)
-			s.WriteString(titleStyle.Render(line) + "\n")
+			s.WriteString(titleStyle.Render(line) + "
+")
 		}
 	}
 	
@@ -598,7 +626,8 @@ func (m Model) renderHistoryView() string {
 			cursor = m.styles.Cursor.Render("> ")
 			style = m.styles.ActiveTitle
 		}
-		s.WriteString(fmt.Sprintf("%s%s %s\n", cursor, style.Render(h.Title), m.styles.Meta.Render("("+h.UpdatedAt.Format("2006-01-02")+")")))
+		s.WriteString(fmt.Sprintf("%s%s %s
+", cursor, style.Render(h.Title), m.styles.Meta.Render("("+h.UpdatedAt.Format("2006-01-02")+")")))
 	}
 	if len(m.history) == 0 {
 		s.WriteString(m.styles.Meta.Render("No watch history."))
@@ -615,7 +644,8 @@ func (m Model) renderPlaylistView() string {
 			cursor = m.styles.Cursor.Render("> ")
 			style = m.styles.ActiveTitle
 		}
-		s.WriteString(fmt.Sprintf("%s%s %s\n", cursor, style.Render(p.Title), m.styles.MetaHighlight.Render("["+p.Duration+"]")))
+		s.WriteString(fmt.Sprintf("%s%s %s
+", cursor, style.Render(p.Title), m.styles.MetaHighlight.Render("["+p.Duration+"]")))
 	}
 	if len(m.playlist) == 0 {
 		s.WriteString(m.styles.Meta.Render("No items in playlist."))
@@ -625,7 +655,9 @@ func (m Model) renderPlaylistView() string {
 
 func (m Model) renderDownloadQualityView() string {
 	var s strings.Builder
-	s.WriteString(m.styles.ActiveTitle.Render("── SELECT DOWNLOAD QUALITY ──") + "\n\n")
+	s.WriteString(m.styles.ActiveTitle.Render("── SELECT DOWNLOAD QUALITY ──") + "
+
+")
 	for i, q := range m.qualities {
 		prefix := "  "
 		style := m.styles.Subtitle
@@ -633,7 +665,8 @@ func (m Model) renderDownloadQualityView() string {
 			prefix = m.styles.Cursor.Render("> ")
 			style = m.styles.ActiveTitle
 		}
-		s.WriteString(fmt.Sprintf("%s%s\n", prefix, style.Render(q)))
+		s.WriteString(fmt.Sprintf("%s%s
+", prefix, style.Render(q)))
 	}
 	return s.String()
 }
@@ -652,7 +685,8 @@ func (m Model) renderLegend() string {
 	status := m.styles.Status.Render("Status: " + m.status)
 	help := m.styles.Meta.Render("1-5: views | q: quit | space: pause | " + keys)
 	
-	return m.styles.Legend.Width(m.width).Render(status + "\n" + help)
+	return m.styles.Legend.Width(m.width).Render(status + "
+" + help)
 }
 
 func truncate(s string, max int) string {
